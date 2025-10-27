@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Publishers | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>Publishers</h2>
+
+<table>
+    <thead>
+        <tr><th>Name</th><th>City</th><th>Country</th></tr>
+    </thead>
+    <tbody>
+        {% for publisher in publishers %}
+            <tr>
+                <td><a href="{% url 'publisher_detail' publisher.id %}">{{ publisher.name }}</a></td>
+                <td>{{ publisher.city }}</td>
+                <td>{{ publisher.country }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No publishers available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<a href="{% url 'add_publisher' %}"><div class="btn btn-outline-success">➕ Add a Publisher</div></a>
+
+{% endblock %}

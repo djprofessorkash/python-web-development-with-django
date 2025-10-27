@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ publisher.name }} | Library Catalog{% endblock %}
+{% block content %}
+<h2>Edit "{{ publisher.name }}"</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <button class="btn btn-outline-info" type="submit">Save Changes</button>
+</form>
+
+<br>
+<a href="{% url 'publisher_detail' publisher.id %}"><div class="btn btn-outline-dark">← Back to Publisher Details</div></a>
+{% endblock %}

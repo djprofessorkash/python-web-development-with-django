@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ publisher.name }} | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>{{ publisher.name }}</h2>
+<p><strong>City:</strong> {{ publisher.city }}<br>
+<strong>Country:</strong> {{ publisher.country }}</p>
+
+<h3>Books Published by {{ publisher.name }}</h3>
+<ul>
+    {% for book in books %}
+        <li><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a> — {{ book.author.first_name }} {{ book.author.last_name }}</li>
+    {% empty %}
+        <li>No books found for this publisher.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'edit_publisher' publisher.id %}"><div class="btn btn-outline-warning">✏️ Edit</div></a>
+<a href="{% url 'delete_publisher' publisher.id %}" style="color:red;"><div class="btn btn-outline-danger">🗑️ Delete</div></a>
+{% endblock %}

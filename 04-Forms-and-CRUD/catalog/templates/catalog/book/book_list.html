@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Books | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>All Books</h2>
+
+<div class="search-bar">
+    <form method="get">
+        <input type="text" name="q" placeholder="Search by title or author..." value="{{ request.GET.q }}">
+        <input type="submit" value="Search">
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Year</th>
+            <th>Genres</th>
+            <th>ISBN</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+                <td><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></td>
+                <td>{{ book.author.first_name }} {{ book.author.last_name }}</td>
+                <td>
+                    {% if book.publisher %}
+                        <a href="{% url 'publisher_detail' book.publisher.id %}">{{ book.publisher.name }}</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ book.publication_year }}</td>
+                <td>
+                    {% for g in book.genre.all %}
+                        <a href="{% url 'genre_detail' g.id %}">{{ g.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ book.isbn }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">No books found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<a href="{% url 'add_book' %}"><div class="btn btn-outline-success">➕ Add a Book</div></a>
+
+{% endblock %}
+
+{% comment %} <h1>{{ page_title }}</h1>
+
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Library Catalog</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 2rem; background: #f5f5f5; }
+            h1 { color: #2c3e50; }
+            table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; }
+            th, td { padding: 0.5rem 1rem; border-bottom: 1px solid #ddd; }
+            th { background: #ecf0f1; text-align: left; }
+        </style>
+    </head>
+
+    <h1>📚 Library Catalog</h1>
+
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Year</th>
+                    <th>Genres</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr>
+                        <td><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></td>
+                        <td>{{ book.author.first_name }} {{ book.author.last_name }}</td>
+                        <td>
+                            {% if book.publisher %}
+                                {{ book.publisher.name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ book.publication_year }}</td>
+                        <td>
+                            {% for g in book.genre.all %}
+                                {{ g.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ book.isbn }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6">No books in the catalog.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>  {% endcomment %}

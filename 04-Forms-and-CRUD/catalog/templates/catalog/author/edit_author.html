@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ author.first_name }} {{ author.last_name }} | Library Catalog{% endblock %}
+{% block content %}
+<h2>Edit "{{ author.first_name }} {{ author.last_name }}"</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <button class="btn btn-outline-info" type="submit">Save Changes</button>
+</form>
+
+<br>
+<a href="{% url 'author_detail' author.id %}"><div class="btn btn-outline-dark">← Back to Author Details</div></a>
+{% endblock %}

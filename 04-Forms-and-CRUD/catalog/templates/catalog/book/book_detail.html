@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+<a href="{% url 'book_list' %}">← Back to all books</a>
+
+{% block title %}{{ genre.name }} | Library Catalog{% endblock %}
+
+{% block content %}
+<h1>{{ book.title }}</h1>
+<p class="meta">
+    <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
+    <strong>Publisher:</strong>
+    {% if book.publisher %}
+        {{ book.publisher.name }}
+    {% else %}
+        N/A
+    {% endif %}<br>
+    <strong>Year:</strong> {{ book.publication_year }}<br>
+    <strong>ISBN:</strong> {{ book.isbn }}
+</p>
+
+<h3>Genres</h3>
+<ul>
+    {% for g in book.genre.all %}
+        <li>{{ g.name }}</li>
+    {% empty %}
+        <li>No genres listed.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'edit_book' book.id %}"><div class="btn btn-outline-warning">✏️ Edit</div></a>
+<a href="{% url 'delete_book' book.id %}" style="color:red;"><div class="btn btn-outline-danger">🗑️ Delete</div></a>
+{% endblock %}

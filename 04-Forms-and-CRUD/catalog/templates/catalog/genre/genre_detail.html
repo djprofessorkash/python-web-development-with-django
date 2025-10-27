@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ genre.name }} | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>Books in "{{ genre.name }}"</h2>
+<ul>
+    {% for book in books %}
+        <li>
+            <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+            — {{ book.author.first_name }} {{ book.author.last_name }}
+        </li>
+    {% empty %}
+        <li>No books available in this genre.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'edit_genre' genre.id %}"><div class="btn btn-outline-warning">✏️ Edit</div></a>
+<a href="{% url 'delete_genre' genre.id %}" style="color:red;"><div class="btn btn-outline-danger">🗑️ Delete</div></a>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Add Author | Library Catalog{% endblock %}
+{% block content %}
+<h2>Add a New Author</h2>
+
+<form method="POST" class="p-3 border rounded bg-light">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-2">Save</button>
+</form>
+
+<br>
+<a href="{% url 'author_list' %}"><div class="btn btn-outline-secondary">← Back to Authors</div></a>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ author.first_name }} {{ author.last_name }} | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>{{ author.last_name }}, {{ author.first_name }}</h2>
+<p><strong>Birth Year:</strong> {{ author.birth_year }}</p>
+
+<h3>{{ author.last_name }}'s Written Works</h3>
+<ul>
+    {% for book in books %}
+        <li><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a> ({{ book.publication_year }})</li>
+    {% empty %}
+        <li>No books found for this author.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'edit_author' author.id %}"><div class="btn btn-outline-warning">✏️ Edit</div></a>
+<a href="{% url 'delete_author' author.id %}" style="color:red;"><div class="btn btn-outline-danger">🗑️ Delete</div></a>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Genres | Library Catalog{% endblock %}
+
+{% block content %}
+<h2>Genres</h2>
+
+<table>
+    <thead>
+        <tr><th>Name</th></tr>
+    </thead>
+    <tbody>
+        {% for genre in genres %}
+            <tr>
+                <td><a href="{% url 'genre_detail' genre.id %}">{{ genre.name }}</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="1">No genres defined.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<a href="{% url 'add_genre' %}"><div class="btn btn-outline-success">➕ Add a Genre</div></a>
+
+{% endblock %}
