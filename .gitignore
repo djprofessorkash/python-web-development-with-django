@@ -1,0 +1,15 @@
+# Cached Python Materials
+__pycache__/
+*/__pycache__/
+
+# Virtual Environment Configurations
+venv/
+*/venv/
+
+# SQLite Databases
+*.sqlite3
+*/*.sqlite3
+
+# Unfinished Tutorial Materials
+tutorials/
+*/tutorials/
