@@ -13,3 +13,7 @@ venv/
 # Unfinished Tutorial Materials
 tutorials/
 */tutorials/
+
+# Garbage Files
+.DS_Store
+*/.DS_Store
