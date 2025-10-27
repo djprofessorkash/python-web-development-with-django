@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Cookbook{% endblock %}</title>
+    <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fafafa; }
+    header { background:#6b8e23; color:#fff; padding:1rem; }
+    header a { color: #fff; margin-right: 1rem; text-decoration:none; }
+    main { max-width: 900px; margin: 2rem auto; padding: 1rem; background: #fff; border-radius:6px; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:0.6rem; border-bottom: 1px solid #eee; }
+    .actions { font-size:0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+    <a href="{% url 'recipe_list' %}">Cookbook</a>
+    <a href="{% url 'recipe_create' %}">Add Recipe</a>
+    <a href="{% url 'recipes_stats' %}">Stats</a>
+    </header>
+    <main>
+    {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

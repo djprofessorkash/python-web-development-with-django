@@ -1,0 +1,24 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+<h2>Statistics</h2>
+
+<h3>Recipes per Chef</h3>
+<ul>
+    {% for chef in chefs_counts %}
+        <li>{{ chef.name }} — {{ chef.recipe_count }} recipes</li>
+    {% empty %}
+        <li>No data.</li>
+    {% endfor %}
+</ul>
+
+<p><strong>Average cook time:</strong> {{ avg_cook_time|floatformat:1 }} minutes</p>
+
+<h3>Top Recipes by Number of Ingredients</h3>
+<ol>
+    {% for r in top_recipes_by_ingredients %}
+        <li><a href="{{ r.get_absolute_url }}">{{ r.title }}</a> — {{ r.num_ingredients }} ingredients</li>
+    {% empty %}
+        <li>No recipes.</li>
+    {% endfor %}
+</ol>
+{% endblock %}
