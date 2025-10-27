@@ -18,7 +18,13 @@
         {% for recipe in page_obj.object_list %}
         <tr>
             <td><a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a></td>
-            <td>{{ recipe.chef.name if recipe.chef else "—" }}</td>
+            <td>
+                {% if recipe.chef %}
+                    {{ recipe.chef.name }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
             <td>{{ recipe.cook_time_minutes }}m</td>
             <td>{{ recipe.get_difficulty_display }}</td>
             <td>

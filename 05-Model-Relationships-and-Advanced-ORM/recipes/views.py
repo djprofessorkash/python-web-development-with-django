@@ -75,7 +75,7 @@ def stats_dashboard(request):
     chefs_counts = Chef.objects.annotate(recipe_count=Count("recipes")).order_by("-recipe_count")
 
     # Average cook time across all recipes
-    avg_cook_time = Recipe.objects.aggregate(avg_time=Avg("cook_time_minutes"))["avg_time"]
+    avg_cook_time = Recipe.objects.aggregate(avg_time=Avg("cook_time_in_minutes"))["avg_time"]
 
     # Top 5 recipes with most ingredients
     top_recipes_by_ingredients = Recipe.objects.annotate(num_ingredients=Count("ingredients")).order_by("-num_ingredients")[:5]
