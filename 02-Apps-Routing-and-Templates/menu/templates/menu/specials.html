@@ -1,0 +1,15 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+<ul>
+    {% for item in specials %}
+        <li>
+            <strong>{{ item.name }}</strong> — ${{ item.price|floatformat:2 }}<br>
+            <em>{{ item.desc }}</em>
+        </li>
+    {% empty %}
+        <li>No specials today. Check back soon!</li>
+    {% endfor %}
+</ul>
+{% endblock %}

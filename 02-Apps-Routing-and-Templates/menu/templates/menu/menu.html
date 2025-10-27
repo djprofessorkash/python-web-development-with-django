@@ -1,0 +1,46 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+
+{% load static %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Item</th>
+            <th>Price ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% comment %} {% for item in menu_items %}
+            <tr>
+                <td>{{ item.category }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price|floatformat:2 }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No menu items available.</td></tr>
+        {% endfor %} {% endcomment %}
+        {% for item in menu_items %}
+            <tr>
+                <td>
+                    {% if item.category == 'Coding Coffee' %}
+                        <img src="{% static 'images/coffee.png' %}" alt="Coffee" width="40">
+                    {% elif item.category == 'Technical Tea' %}
+                        <img src="{% static 'images/tea.png' %}" alt="Tea" width="40">
+                    {% elif item.category == 'Programming Pastries' %}
+                        <img src="{% static 'images/pastry.png' %}" alt="Pastry" width="40">
+                    {% endif %}
+                    {{ item.category }}
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price|floatformat:2 }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No menu items available.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
