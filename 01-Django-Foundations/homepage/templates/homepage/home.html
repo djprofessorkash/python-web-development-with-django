@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>My Portfolio</title>
+        <link rel="stylesheet" href="{% static 'homepage/style.css' %}">
+    </head>
+    <body>
+        <h1>Welcome to {{ name }}'s homepage!</h1>
+        <p>Hi, my name's {{ name }}. I'm learning Django!</p>
+        <h3>Domain Interests</h3>
+        <ul>
+            {% for interest in interests %}
+                <li>{{ interest }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
