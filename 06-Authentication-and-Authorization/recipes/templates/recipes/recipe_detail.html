@@ -1,0 +1,35 @@
+{% extends 'recipes/base.html' %}
+{% block title %}{{ recipe.title }}{% endblock %}
+{% block content %}
+<h1>{{ recipe.title }}</h1>
+<p><strong>Chef:</strong> {{ recipe.chef.name if recipe.chef else "—" }}</p>
+<p><strong>Cook time:</strong> {{ recipe.cook_time_minutes }} minutes</p>
+<p><strong>Difficulty:</strong> {{ recipe.get_difficulty_display }}</p>
+
+<h3>Ingredients</h3>
+<ul>
+    {% for ing in recipe.ingredients.all %}
+        <li>{{ ing.name }}</li>
+    {% empty %}
+        <li>No ingredients listed.</li>
+    {% endfor %}
+</ul>
+
+<h3>Tags</h3>
+<ul>
+    {% for tag in recipe.tags.all %}
+        <li>{{ tag.name }}</li>
+    {% empty %}
+        <li>No tags.</li>
+    {% endfor %}
+</ul>
+
+<h3>Instructions</h3>
+<pre style="white-space:pre-wrap;">{{ recipe.instructions }}</pre>
+
+<p>
+    <a href="{% url 'recipe_edit' recipe.pk %}">Edit</a> |
+    <a href="{% url 'recipe_delete' recipe.pk %}">Delete</a> |
+    <a href="{% url 'recipe_list' %}">Back to list</a>
+</p>
+{% endblock %}
