@@ -14,6 +14,10 @@ venv/
 tutorials/
 */tutorials/
 
+# Uploaded Media Content
+media/
+*/media/
+
 # Garbage Files
 .DS_Store
 */.DS_Store
