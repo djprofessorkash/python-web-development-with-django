@@ -1,0 +1,18 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<h2>Staff Dashboard</h2>
+
+<p><strong>Total Recipes:</strong> {{ total_recipes }}</p>
+<p><strong>Total Chefs:</strong> {{ total_chefs }}</p>
+<p><strong>Public Recipes:</strong> {{ public_recipes }}</p>
+<p><strong>Private Recipes:</strong> {{ private_recipes }}</p>
+
+<h3>Top 5 Chefs</h3>
+<ol>
+  {% for chef in top_chefs %}
+    <li>{{ chef }} ({{ chef.num_recipes }} recipes)</li>
+  {% empty %}
+    <li>No data yet.</li>
+  {% endfor %}
+</ol>
+{% endblock %}

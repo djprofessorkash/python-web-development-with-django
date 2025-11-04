@@ -1,0 +1,51 @@
+{% extends 'recipes/base.html' %}
+{% block title %}{{ recipe.title }}{% endblock %}
+{% block content %}
+{% if recipe.image.all %}
+    <div class="gallery">
+        {% for image in recipes.image.all %}
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="width:200px; height:auto; margin:5px;">
+        {% empty %}
+        <p>No gallery images uploaded.</p>
+        {% endfor %}
+    </div>
+{% endif %}
+<h1>{{ recipe.title }}</h1>
+<p><strong>Chef:</strong> 
+    {% if recipe.chef %}
+        {{ recipe.chef.name }}
+    {% else %}
+        -
+    {% endif %}
+</p>
+<p><strong>Cook time:</strong> {{ recipe.cook_time_in_minutes }} minutes</p>
+<p><strong>Difficulty:</strong> {{ recipe.get_difficulty_display }}</p>
+<p><strong>Visibility:</strong> {{ recipe.is_public|yesno:"Public,Private" }}</p>
+
+<h3>Ingredients</h3>
+<ul>
+    {% for ing in recipe.ingredients.all %}
+        <li>{{ ing.name }}</li>
+    {% empty %}
+        <li>No ingredients listed.</li>
+    {% endfor %}
+</ul>
+
+<h3>Tags</h3>
+<ul>
+    {% for tag in recipe.tags.all %}
+        <li>{{ tag.name }}</li>
+    {% empty %}
+        <li>No tags.</li>
+    {% endfor %}
+</ul>
+
+<h3>Instructions</h3>
+<pre style="white-space:pre-wrap;">{{ recipe.instructions }}</pre>
+
+<p>
+    <a href="{% url 'recipe_edit' recipe.pk %}">Edit</a> |
+    <a href="{% url 'recipe_delete' recipe.pk %}">Delete</a> |
+    <a href="{% url 'recipe_list' %}">Back to list</a>
+</p>
+{% endblock %}

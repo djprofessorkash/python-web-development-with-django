@@ -1,0 +1,161 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Count, Avg, Q
+from django.core.paginator import Paginator
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponseForbidden
+from .models import Recipe, RecipeImage, Chef, Ingredient, Tag
+from .forms import RecipeForm, RecipeImageFormSet, SignUpForm
+
+# ADMIN DASHBOARD.
+@staff_member_required
+def admin_dashboard(request):
+    total_recipes = Recipe.objects.count()
+    total_chefs = Chef.objects.count()
+    public_recipes = Recipe.objects.filter(is_public=True).count()
+    private_recipes = total_recipes - public_recipes
+    top_chefs = Chef.objects.annotate(num_recipes=Count("recipes")).order_by("-num_recipes")[:5]
+
+    context = {
+        "total_recipes": total_recipes,
+        "total_chefs": total_chefs,
+        "public_recipes": public_recipes,
+        "private_recipes": private_recipes,
+        "top_chefs": top_chefs,
+    }
+    return render(request, "recipes/admin_dashboard.html", context)
+
+# USER REGISTRATION.
+def signup_view(request):
+    """ Enable new users to register account. """
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("recipe_list")
+    else:
+        form = SignUpForm()
+    return render(request, "registration/signup.html", {"form": form})
+
+# READ: Display All Recipes.
+def recipe_list(request):
+    # Base queryset on recipe data.
+    qs = Recipe.objects.select_related("chef").prefetch_related("ingredients", "tags")
+
+    # Staff members should see all relevant queried data.
+    if request.user.is_authenticated and request.user.is_staff:
+        qs = qs.all()
+    # Other authenticated users should only see user-owned and other public data.
+    elif request.user.is_authenticated:
+        try:
+            chef = Chef.objects.get(user=request.user)
+            qs = qs.filter(Q(is_public=True) | Q(chef=chef))
+        except Chef.DoesNotExist:
+            qs = qs.filter(is_public=True)
+    # Anonymous users should only see public data.
+    else:
+        qs = qs.filter(is_public=True)
+
+    # Simple filters via GET params.
+    tag = request.GET.get("tag")
+    ingredient = request.GET.get("ingredient")
+    chef = request.GET.get("chef")
+    q = request.GET.get("q")
+
+    if tag:
+        qs = qs.filter(tags__name__iexact=tag)
+    if ingredient:
+        qs = qs.filter(ingredients__name__iexact=ingredient)
+    if chef:
+        qs = qs.filter(chef__name__icontains=chef)
+    if q:
+        qs = qs.filter(title__icontains=q)
+
+    # Distinct because of JOINs.
+    qs = qs.distinct()
+
+    # Basic pagination.
+    paginator = Paginator(qs, 8)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "recipes/recipe_list.html", {"page_obj": page_obj})
+
+# READ: Display Individual Recipe by ID.
+def recipe_detail(request, pk):
+    recipe = get_object_or_404(Recipe.objects.select_related("chef").prefetch_related("ingredients", "tags"), pk=pk)
+    return render(request, "recipes/recipe_detail.html", {"recipe": recipe})
+
+# CREATE: Add New Recipe. (Requires user authorization.)
+@login_required
+def recipe_create(request):
+    if request.method == "POST":
+        form = RecipeForm(request.POST, request.FILES)
+        formset = RecipeImageFormSet(request.POST, request.FILES, queryset=RecipeImage.objects.none())
+        if form.is_valid() and formset.is_valid():
+            new_recipe = form.save(commit=False)
+            new_recipe.chef = Chef.objects.get(user=request.user)
+            new_recipe.save()
+            form.save_m2m()
+            for formdata in formset.cleaned_data:
+                if formdata:
+                    image = formdata["image"]
+                    RecipeImage.objects.create(recipe=new_recipe, image=image)
+            return redirect(new_recipe.get_absolute_url())
+    else:
+        form = RecipeForm()
+        formset = RecipeImageFormSet(queryset=RecipeImage.objects.none())
+    return render(request, "recipes/recipe_form.html", {"form": form, "formset": formset, "action": "Create"})
+
+# READ: Display User's Recipes. (Requires user authorization.)
+@login_required
+def my_recipes(request):
+    chef = Chef.objects.get(user=request.user)
+    my_recipes = Recipe.objects.filter(chef=chef).select_related("chef")
+    return render(request, "recipes/my_recipes.html", {"recipes": my_recipes})
+
+# UPDATE: Edit Existing Recipe by ID. (Requires user authorization.)
+@login_required
+def recipe_edit(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.chef.user != request.user:
+        return HttpResponseForbidden("You do not have permission to edit this recipe.")
+    if request.method == "POST":
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
+        if form.is_valid():
+            form.save()
+            return redirect(recipe.get_absolute_url())
+    else:
+        form = RecipeForm(instance=recipe)
+    return render(request, "recipes/recipe_form.html", {"form": form, "action": "Edit"})
+
+# DELETE: Delete Existing Recipe by ID. (Requires user authorization.)
+@login_required
+def recipe_delete(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.chef.user != request.user:
+        return HttpResponseForbidden("You cannot delete another user's recipe.")
+    if request.method == "POST":
+        recipe.delete()
+        return redirect("recipe_list")
+    return render(request, "recipes/recipe_confirm_delete.html", {"recipe": recipe})
+
+# Aggregations / Advanced examples for dashboards
+def stats_dashboard(request):
+    # Number of recipes per chef (annotate)
+    chefs_counts = Chef.objects.annotate(recipe_count=Count("recipes")).order_by("-recipe_count")
+
+    # Average cook time across all recipes
+    avg_cook_time = Recipe.objects.aggregate(avg_time=Avg("cook_time_in_minutes"))["avg_time"]
+
+    # Top 5 recipes with most ingredients
+    top_recipes_by_ingredients = Recipe.objects.annotate(num_ingredients=Count("ingredients")).order_by("-num_ingredients")[:5]
+
+    return render(request, "recipes/stats.html", {
+        "chefs_counts": chefs_counts,
+        "avg_cook_time": avg_cook_time,
+        "top_recipes_by_ingredients": top_recipes_by_ingredients,
+    })

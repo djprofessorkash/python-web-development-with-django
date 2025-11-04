@@ -1,0 +1,16 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<h2>{{ action }} Recipe</h2>
+<p><label for="id_is_public">Publically visible?</label> {{ form.is_public }}</p>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h4>Gallery Images</h4>
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+    <button type="submit">{{ action }}</button>
+    <a href="{% url 'recipe_list' %}">Cancel</a>
+</form>
+{% endblock %}
