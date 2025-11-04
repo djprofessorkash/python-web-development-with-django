@@ -12,4 +12,5 @@ Curriculum content for Noble Desktop's Python/Django for Web Development coursew
 6. **Authentication and Authorization: [Coding Cookbook, Part Two](./06-Authentication-and-Authorization/)**
 7. **Class-Based and Generic Views: [Coding Cookbook, Part Three](./07-Class-Based-and-Generic-Views/)**
 8. **File Handling and Media: [Coding Cookbook, Part Four](./08-File-Handling-and-Media/)**
-9.  **APIs with Django REST Framework (DRF)**
+9.  **APIs with Django REST Framework (DRF): [Movie Menagerie, Part One](./09-APIs-with-Django-REST-Framework/)**
+10. **Full-Stack Capstone Development: [Movie Menagerie, Part Two](./10-Full-Stack-Development-with-Django/)**
