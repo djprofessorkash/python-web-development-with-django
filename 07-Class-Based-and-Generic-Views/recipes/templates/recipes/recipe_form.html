@@ -1,0 +1,13 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+<h2>{{ action }} Recipe</h2>
+<p><label for="id_is_public">Publically visible?</label> {{ form.is_public }}</p>
+<form method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit">{{ action }}</button>
+    <a href="{% url 'recipe_list' %}">Cancel</a>
+</form>
+{% endblock %}

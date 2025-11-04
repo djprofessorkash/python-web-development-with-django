@@ -1,0 +1,53 @@
+{% extends 'recipes/base.html' %}
+{% block title %}Recipes{% endblock %}
+{% block content %}
+<h1>Recipes</h1>
+
+<form method="get" style="margin-bottom: 1rem;">
+    <input type="text" name="q" placeholder="search title" value="{{ request.GET.q }}">
+    <input type="text" name="ingredient" placeholder="ingredient" value="{{ request.GET.ingredient }}">
+    <input type="submit" value="Filter">
+</form>
+
+{% if page_obj.object_list %}
+    <table>
+    <thead>
+        <tr><th>Title</th><th>Chef</th><th>Cook time</th><th>Difficulty</th><th>Ingredients</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for recipe in page_obj.object_list %}
+        <tr>
+            <td><a href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a></td>
+            <td>
+                {% if recipe.chef %}
+                    {{ recipe.chef.name }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ recipe.cook_time_minutes }}m</td>
+            <td>{{ recipe.get_difficulty_display }}</td>
+            <td>
+            {% for ing in recipe.ingredients.all %}
+                {{ ing.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}-{% endfor %}
+            </td>
+            <td class="actions">
+            <a href="{% url 'recipe_edit' recipe.pk %}">Edit</a> |
+            <a href="{% url 'recipe_delete' recipe.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+    <div style="margin-top:1rem;">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+    </div>
+
+{% else %}
+    <p>No recipes found.</p>
+{% endif %}
+{% endblock %}
