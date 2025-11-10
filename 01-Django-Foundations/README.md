@@ -126,7 +126,7 @@ This delegates root URL routing to the `portfolio` app.
 
 ## 5. Create basic views
 
-Edit `portfolio/views.py` and add the following views:
+Edit `homepage/views.py` and add the following views:
 
 ```python
 from django.shortcuts import render
