@@ -137,7 +137,7 @@ def home(request):
         'page_title': 'Home',
         'intro': 'Welcome to my portfolio! Here are some selected projects.'
     }
-    return render(request, 'portfolio/home.html', context)
+    return render(request, 'homepage/home.html', context)
 
 
 def about(request):
@@ -145,7 +145,7 @@ def about(request):
         'page_title': 'About',
         'bio': 'I am a developer who loves Python and web development.'
     }
-    return render(request, 'portfolio/about.html', context)
+    return render(request, 'homepage/about.html', context)
 
 
 def projects(request):
