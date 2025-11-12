@@ -100,7 +100,13 @@ admin.site.register(Genre)
 admin.site.register(Book)
 ```
 
-Access `/admin` to manage books, authors, and genres.
+Register a superuser:
+
+```bash
+python manage.py createsuperuser
+```
+
+Access `/admin` to manage books, authors, and genres. 
 
 ---
 
@@ -124,7 +130,18 @@ This completes **Day 3** of the **Python for Web Development** course and the fi
 
 ---
 
-### Recommended Stretch Challenges
+### Reinforcement Exercise
+
+Add new models `Location` and `Libarian`:
+
+- The `Location` has a `name`, `opening_hour` and `closing_hour` columns  
+- The `Librarian` has a `first_name`, `last_name`, and `location` columns
+- It is up to you to create determine the data types and how to add these models
+- Register the models in `catalog/admin.py`
+- Remember to generate a migration and migrate after creating the models (check the migration step)
+- TEST: Add two locations and a pair of librarians who work at each location using the `admin` panel
+
+### Additional Goals
 
 1. **Book Cover Field**: Add an optional `ImageField` for book covers and display them in the admin.  
 2. **Author Full Name Property**: Add a `full_name` property to `Author` and use it in admin list displays.  
