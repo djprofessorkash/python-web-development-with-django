@@ -2,7 +2,7 @@
 
 Welcome to **Python for Web Development with Django**! In Day One of this course, we'll focus on learning the fundamentals. 
 
-In this walkthrough, we'll build a **Personal Portfolio** using Django. This tutorial assumes you have Python 3 installed and are comfortable with basic command-line operations.
+In this walkthrough, we'll build a **Personal Portfolio** using Django. This tutorial assumes you have Python 3 installed along with VS Code and are comfortable with basic command-line operations.
 
 ---
 
@@ -24,10 +24,8 @@ Open your terminal and run the following commands:
 mkdir portfolio
 cd portfolio
 python -m venv venv
-# macOS / Linux
-source venv/bin/activate
-# Windows
-# venv\Scripts\activate
+source venv/bin/activate    # macOS / Linux only
+venv\Scripts\activate       # Windows only
 
 # Upgrade pip and install Django
 pip install --upgrade pip
@@ -120,7 +118,7 @@ urlpatterns = [
 ]
 ```
 
-This delegates root URL routing to the `portfolio` app.
+This delegates root URL routing to the `homepage` app.
 
 ---
 
@@ -272,6 +270,18 @@ If you see your pages, congratulations — your first Django app is live locally
 
 ---
 
+## Reinforcement Exercise
+
+Create an additional template for the app. The nature of the template / web page is up to you. In order to create and register the template remember:
+
+1. Create the proper view in `homepage/views.py` 
+2. The view passes along any necessary context such as the `page_title`
+3. Add the html into `homepage/templates/homepage/<your_template_here>.html`
+4. The html template extends `base.html`
+5. You have properly formatted your tags and include `{% block content %}` and `{% endblock %}`
+
+---
+
 ## Resources
 
 - Django official tutorial: https://docs.djangoproject.com/en/stable/intro/tutorial01/
@@ -280,6 +290,3 @@ If you see your pages, congratulations — your first Django app is live locally
 ---
 
 Happy coding! 🎉
-
-If you'd like, I can also export this file as a downloadable markdown file or create an instructor-facing version with timings and checkpoints.
-
