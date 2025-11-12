@@ -22,13 +22,15 @@ In `recipes/models.py`:
 from django.contrib.auth.models import User
 
 class Chef(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # add this line
     name = models.CharField(max_length=100)
     bio = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 ```
+
+`User` is a model built into Django by default. The `on_delete` argument chooses default behavior for when a `Chef` gets deleted, in this case also deleting the associated `User`.
 
 Run migrations:
 
@@ -40,6 +42,8 @@ python manage.py migrate
 ---
 
 ## 2. Add User Forms
+
+The prebuilt class `UserCreationForm` allows us to skip the majority of configuration for the new user form.
 
 **`recipes/forms.py`**
 
@@ -58,6 +62,8 @@ class SignUpForm(UserCreationForm):
 
 ## 3. Authentication Views
 
+Set up authentication view to allow users to sign up. You will also build a similar login view.
+
 **`recipes/views.py`**
 
 ```python
@@ -71,7 +77,7 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user) # login handles session cookie magic for us
             return redirect('recipe_list')
     else:
         form = SignUpForm()
