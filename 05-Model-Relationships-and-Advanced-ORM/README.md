@@ -40,6 +40,9 @@ Add `'recipes'` to `INSTALLED_APPS` in `cookbook/settings.py`.
 
 ## 2. Create Models with Relationships
 
+![Diagram goes here](django-lesson-5-diagram.png)
+*Join tables are implicitly built by the ManyToManyField below*
+
 Edit `recipes/models.py`:
 
 ```python
@@ -110,29 +113,33 @@ Test in `/admin` to create sample chefs, ingredients, tags, and recipes.
 ```python
 from django.shortcuts import render, get_object_or_404
 from .models import Recipe
-from django.core.paginator import Paginator
-
+from django.core.paginator import Paginator 
+# Paginator allows for automatic pages of items with a query set, list, tuple, or other data with a __len__
 
 def recipe_list(request):
-    qs = Recipe.objects.select_related('chef').prefetch_related('ingredients', 'tags').all()
+    query_set = Recipe.objects.select_related('chef').prefetch_related('ingredients', 'tags').all()
+    # select_related allows for better data fetching off of a foreign key related model
+    # prefetch_related batches data fetching for many to many and one to many models
 
     tag = request.GET.get('tag')
     ingredient = request.GET.get('ingredient')
     chef = request.GET.get('chef')
     q = request.GET.get('q')
+    # this determines whether query params were used (http://...?ingredient=salt&chef=Gordon)
 
     if tag:
-        qs = qs.filter(tags__name__iexact=tag)
+        query_set = query_set.filter(tags__name__iexact=tag)
     if ingredient:
-        qs = qs.filter(ingredients__name__iexact=ingredient)
+        query_set = query_set.filter(ingredients__name__iexact=ingredient)
     if chef:
-        qs = qs.filter(chef__name__icontains=chef)
+        query_set = query_set.filter(chef__name__icontains=chef)
     if q:
-        qs = qs.filter(title__icontains=q)
+        query_set = query_set.filter(title__icontains=q)
 
-    qs = qs.distinct()
+    query_set = query_set.distinct()
 
-    paginator = Paginator(qs, 8)
+    # Paginator accepts the query set and items per page
+    paginator = Paginator(query_set, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -215,6 +222,7 @@ This completes **Day 5** of the **Python for Web Development** course and the fi
 
 #### 2. Recipe Difficulty Level
 - Add a difficulty property (choices: Easy, Medium, Hard) to Recipe using CharField + choices.
+- If no difficulty given, default to Easy.
 - Display difficulty in list and detail pages.
 - Add filtering by difficulty in the recipe list view.
 
@@ -225,4 +233,3 @@ This completes **Day 5** of the **Python for Web Development** course and the fi
 #### 4. Bonus Template Exercise
 - Use regroup to group recipes in the list page by chef.
 - Display each chef as a heading, with their recipes underneath.
-

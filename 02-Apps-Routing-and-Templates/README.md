@@ -21,8 +21,8 @@ If you haven't already, create the project and activate your virtual environment
 django-admin startproject pycafe
 cd pycafe
 python -m venv venv
-source venv/bin/activate  # macOS/Linux
-venv\Scripts\activate     # Windows
+source venv/bin/activate    # macOS/Linux only
+venv\Scripts\activate       # Windows only
 pip install django
 ```
 
